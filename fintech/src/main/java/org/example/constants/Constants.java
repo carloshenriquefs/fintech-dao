@@ -42,6 +42,8 @@ public class Constants {
     public static final String USER_NOT_FOUND = "User Not Found";
     public static final String USER_UPDATED = "User Updated";
     public static final String USER_REMOVED = "User Removed";
+
+
     public static final String CODE_NOT_EXIST = "Code does not exist in the table";
 
 }

@@ -1,18 +1,15 @@
 package org.example.dao.transactions;
 
-import org.example.exception.EntityNotFoundException;
-import org.example.model.Transactions;
+import br.com.fiap.model.Transaction;
 
-import java.util.List;
 import java.sql.SQLException;
+import java.util.List;
 
 public interface TransactionsDao {
-
-    void register(Transactions transactions) throws SQLException;
-    Transactions lookUp(long coidgo) throws SQLException, EntityNotFoundException;
-    List<Transactions> list() throws SQLException;
-    void update(Transactions transactions) throws SQLException;
-    void remove(long codigo) throws SQLException, EntityNotFoundException;
+    void insert(Transaction transaction, Long id);
+    Transaction getById(Long id);
+    List<Transaction> getAll();
+    //    void update(Account accounts, Long id);
+//    void remove(Long id);
     void closeConnection() throws SQLException;
-
 }

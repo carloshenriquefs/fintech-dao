@@ -1,20 +1,17 @@
 package org.example.dao.users.impl;
 
-import org.example.dao.users.UsersDao;
-import org.example.exception.EntityNotFoundException;
-import org.example.factory.ConnectionFactory;
-import org.example.model.User;
+import br.com.fiap.dao.users.UsersDao;
+import br.com.fiap.exception.AppFintechException;
+import br.com.fiap.exception.ErrorTypeEnum;
+import br.com.fiap.factory.ConnectionFactory;
+import br.com.fiap.model.User;
 
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.example.constants.Constants.USER_NOT_FOUND;
+import static br.com.fiap.constants.Constants.*;
 
 public class UsersDaoImpl implements UsersDao {
 
@@ -23,93 +20,76 @@ public class UsersDaoImpl implements UsersDao {
     public UsersDaoImpl() throws SQLException {
         connection = ConnectionFactory.getConnection();
     }
+    @Override
+    public void insert(User user) {
+        try {
+            PreparedStatement stm = connection.prepareStatement(
+                    "INSERT INTO tb_fth_user (" +
+                            "cd_user, " +
+                            "nm_first_user, " +
+                            "nm_last_user, " +
+                            "ds_email, " +
+                            "cd_password, " +
+                            "ds_address, " +
+                            "nr_telephone, " +
+                            "ds_gender, " +
+                            "ds_position, " +
+                            "dt_registration) " +
+                            "VALUES (seq_users.nextval, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-    public void register(User user) throws SQLException {
-        PreparedStatement stm = connection.prepareStatement(
-                "INSERT INTO tb_fth_users (" +
-                        "cd_user, " +
-                        "nm_first_user, " +
-                        "nm_last_user, " +
-                        "ds_email, " +
-                        "cd_password, " +
-                        "ds_address, " +
-                        "nr_telephone, " +
-                        "ds_gender, " +
-                        "ds_position, " +
-                        "dt_registration) " +
-                        "VALUES (seq_user.nextval, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            stm.setString(1, user.getUsername());
+            stm.setString(2, user.getLastName());
+            stm.setString(3, user.getEmail());
+            stm.setString(4, user.getPassword());
+            stm.setString(5, user.getAddress());
+            stm.setString(6, user.getTelephone());
+            stm.setString(7, user.getGender());
+            stm.setString(8, user.getPosition());
+            stm.setDate(9, Date.valueOf(user.getDate()));
 
-        stm.setString(1, user.getUsername());
-        stm.setString(2, user.getLastName());
-        stm.setString(3, user.getEmail());
-        stm.setString(4, user.getPassword());
-        stm.setString(5, user.getAddress());
-        stm.setString(6, user.getTelephone());
-        stm.setString(7, user.getGender());
-        stm.setString(8, user.getPosition());
-        stm.setDate(9, Date.valueOf(user.getDate()));
+            stm.executeUpdate();
 
-        stm.executeUpdate();
-    }
-
-    public User lookUp(long codigo) throws SQLException, EntityNotFoundException {
-        PreparedStatement stm = connection.prepareStatement("SELECT * FROM tb_fth_users WHERE cd_user = ?");
-        stm.setLong(1, codigo);
-        ResultSet result = stm.executeQuery();
-
-        if (!result.next())
-            throw new EntityNotFoundException(USER_NOT_FOUND);
-
-        return parseUser(result);
-    }
-
-    public List<User> list() throws SQLException {
-        PreparedStatement stm = connection.prepareStatement("SELECT * FROM tb_fth_users");
-        ResultSet result = stm.executeQuery();
-        List<User> lista = new ArrayList<>();
-
-        while (result.next()) {
-            lista.add(parseUser(result));
+        } catch (SQLException e) {
+            System.err.println(ERROR_REGISTERING_USER + e.getMessage());
+            throw new AppFintechException(e.getMessage(), e, ErrorTypeEnum.ERROR_INSERTING_DATA);
         }
-
-        return lista;
     }
 
-    public void update(User user) throws SQLException {
-        PreparedStatement stm = connection.prepareStatement(
-                "UPDATE tb_fth_users " +
-                        "SET nm_first_user = ?, " +
-                        "nm_last_user = ?, " +
-                        "ds_email = ?, " +
-                        "cd_password = ?, " +
-                        "ds_address = ?, " +
-                        "nr_telephone = ?, " +
-                        "ds_gender = ?, " +
-                        "ds_position = ?, " +
-                        "dt_registration = ? " +
-                        "WHERE cd_user = ?"
-        );
+    @Override
+    public User getById(Long id) {
+        try {
+            PreparedStatement stm = connection.prepareStatement("SELECT * FROM tb_fth_user WHERE cd_user = ?");
+            stm.setLong(1, id);
+            ResultSet result = stm.executeQuery();
 
-        stm.setString(1, user.getUsername());
-        stm.setString(2, user.getLastName());
-        stm.setString(3, user.getEmail());
-        stm.setString(4, user.getPassword());
-        stm.setString(5, user.getAddress());
-        stm.setString(6, user.getTelephone());
-        stm.setString(7, user.getGender());
-        stm.setString(8, user.getPosition());
-        stm.setString(9, user.getDate().toString());
+            if (!result.next())
+                throw new AppFintechException(USER_NOT_FOUND + id, null, ErrorTypeEnum.ERROR_SEARCHING_DATA);
 
-        stm.executeUpdate();
+            return parseUser(result);
+
+        } catch (SQLException e) {
+            System.err.println(ERROR_LOOKING_UP_USER_ID + e.getMessage());
+            throw new AppFintechException(e.getMessage(), e, ErrorTypeEnum.ERROR_SEARCHING_DATA);
+        }
     }
 
-    public void remove(long codigo) throws SQLException, EntityNotFoundException {
-        PreparedStatement stm = connection.prepareStatement("DELETE FROM tb_fth_users WHERE cd_user = ?");
-        stm.setLong(1, codigo);
-        int linha = stm.executeUpdate();
+    @Override
+    public List<User> getAll() {
+        try {
+            PreparedStatement stm = connection.prepareStatement("SELECT * FROM tb_fth_user");
+            ResultSet result = stm.executeQuery();
 
-        if (linha == 0) {
-            throw new EntityNotFoundException(USER_NOT_FOUND);
+            List<User> lista = new ArrayList<>();
+
+            while (result.next()) {
+                lista.add(parseUser(result));
+            }
+
+            return lista;
+
+        } catch (SQLException e) {
+            System.err.println(ERROR_LISTING_USERS + e.getMessage());
+            throw new AppFintechException(e.getMessage(), e, ErrorTypeEnum.ERROR_SEARCHING_DATA);
         }
     }
 
@@ -132,4 +112,3 @@ public class UsersDaoImpl implements UsersDao {
         return new User(id, firstUser, lastUser, email, password, address, telephone, gender, position, registration);
     }
 }
-

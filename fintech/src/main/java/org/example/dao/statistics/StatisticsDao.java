@@ -1,18 +1,16 @@
 package org.example.dao.statistics;
 
-import org.example.exception.EntityNotFoundException;
-import org.example.model.Statistics;
+import br.com.fiap.model.Statistic;
 
 import java.sql.SQLException;
 import java.util.List;
 
 public interface StatisticsDao {
 
-    void register(Statistics statistics) throws SQLException;
-    Statistics lookUp(long codigo) throws SQLException, EntityNotFoundException;
-    List<Statistics> list() throws SQLException;
-    void update(Statistics statistics) throws SQLException;
-    void remove(long codigo) throws  SQLException, EntityNotFoundException;
+    void insert(Statistic statistic, Long id);
+    Statistic getById(Long id);
+    List<Statistic> getAll();
+    //    void update(Account accounts, Long id);
+//    void remove(Long id);
     void closeConnection() throws SQLException;
-
 }

@@ -1,18 +1,17 @@
 package org.example.dao.accounts;
 
-import org.example.exception.EntityNotFoundException;
-import org.example.model.Accounts;
+import br.com.fiap.model.Account;
 
 import java.sql.SQLException;
 import java.util.List;
 
 public interface AccountsDao {
 
-    void register(Accounts accounts) throws SQLException;
-    Accounts lookUp(long codigo)  throws SQLException, EntityNotFoundException;
-    List<Accounts> list() throws SQLException, EntityNotFoundException;
-    void update(Accounts accounts) throws SQLException;
-    void remove(long codigo) throws SQLException, EntityNotFoundException;
+    void insert(Account accounts, Long id);
+    Account getById(Long id);
+    List<Account> getAll();
+//    void update(Account accounts, Long id);
+//    void remove(Long id);
     void closeConnection() throws SQLException;
 
 }

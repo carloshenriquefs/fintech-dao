@@ -1,9 +1,10 @@
 package org.example.dao.statistics.impl;
 
-import org.example.dao.statistics.StatisticsDao;
-import org.example.exception.EntityNotFoundException;
-import org.example.factory.ConnectionFactory;
-import org.example.model.Statistics;
+import br.com.fiap.dao.statistics.StatisticsDao;
+import br.com.fiap.exception.AppFintechException;
+import br.com.fiap.exception.ErrorTypeEnum;
+import br.com.fiap.factory.ConnectionFactory;
+import br.com.fiap.model.Statistic;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,7 +13,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.example.constants.Constants.STATISTICS_NOT_FOUND;
+import static br.com.fiap.constants.Constants.*;
 
 public class StatisticsDaoImpl implements StatisticsDao {
 
@@ -22,95 +23,86 @@ public class StatisticsDaoImpl implements StatisticsDao {
         connection = ConnectionFactory.getConnection();
     }
 
-    public void register(Statistics statistics) throws SQLException {
-        PreparedStatement stm = connection.prepareStatement(
-                "INSERT INTO tb_fth_statistics (" +
-                        "cd_statistics, " +
-                        "cd_user, " +
-                        "dt_month, " +
-                        "dt_year, " +
-                        "vl_budge, " +
-                        "vl_cost, " +
-                        "vl_economy) " +
-                        "VALUES (seq_user.nextval, ?, ?, ?, ?, ?, ?)");
+    @Override
+    public void insert(Statistic statistic, Long id) {
+        try {
+            PreparedStatement stm = connection.prepareStatement(
+                    "INSERT INTO tb_fth_statistics (" +
+                            "cd_statistics, " +
+                            "cd_user, " +
+                            "dt_month, " +
+                            "dt_year, " +
+                            "vl_budge, " +
+                            "vl_cost, " +
+                            "vl_economy) " +
+                            "VALUES (seq_statistic.nextval, ?, ?, ?, ?, ?, ?)");
 
-        stm.setLong(1, statistics.getUserCode());
-        stm.setInt(2, statistics.getMonth());
-        stm.setInt(3, statistics.getYear());
-        stm.setDouble(4, statistics.getBudge());
-        stm.setDouble(5, statistics.getCost());
-        stm.setDouble(6, statistics.getEconomy());
+            stm.setLong(1, id);
+            stm.setInt(2, statistic.getMonth());
+            stm.setInt(3, statistic.getYear());
+            stm.setDouble(4, statistic.getBudge());
+            stm.setDouble(5, statistic.getCost());
+            stm.setDouble(6, statistic.getEconomy());
 
-        stm.executeUpdate();
-    }
+            stm.executeUpdate();
 
-    public Statistics lookUp(long codigo) throws SQLException, EntityNotFoundException {
-        PreparedStatement stm = connection.prepareStatement("SELECT * FROM tb_fth_statistics WHERE cd_user = ?");
-        stm.setLong(1, codigo);
-        ResultSet result = stm.executeQuery();
-
-        if (!result.next())
-            throw new EntityNotFoundException(STATISTICS_NOT_FOUND);
-
-        return parseUser(result);
-    }
-
-    public List<Statistics> list() throws SQLException {
-        PreparedStatement stm = connection.prepareStatement("SELECT * FROM tb_fth_statistics");
-        ResultSet result = stm.executeQuery();
-        List<Statistics> lista = new ArrayList<>();
-
-        while (result.next()) {
-            lista.add(parseUser(result));
-        }
-
-        return lista;
-    }
-
-    public void update(Statistics statistics) throws SQLException {
-        PreparedStatement stm = connection.prepareStatement(
-                "UPDATE tb_fth_statistics " +
-                        "SET cd_user = ?, " +
-                        "dt_month = ?, " +
-                        "dt_year = ?, " +
-                        "vl_budge = ?, " +
-                        "vl_cost = ?, " +
-                        "cl_economy = ? " +
-                        "WHERE cd_user = ?"
-        );
-
-        stm.setLong(1, statistics.getUserCode());
-        stm.setInt(2, statistics.getMonth());
-        stm.setInt(3, statistics.getYear());
-        stm.setDouble(4, statistics.getBudge());
-        stm.setDouble(5, statistics.getCost());
-        stm.setDouble(6, statistics.getEconomy());
-
-        stm.executeUpdate();
-    }
-
-    public void remove(long codigo) throws SQLException, EntityNotFoundException {
-        PreparedStatement stm = connection.prepareStatement("DELETE FROM tb_fth_statistics WHERE cd_user = ?");
-        stm.setLong(1, codigo);
-        int linha = stm.executeUpdate();
-
-        if (linha == 0) {
-            throw new EntityNotFoundException(STATISTICS_NOT_FOUND);
+        } catch (SQLException e) {
+            System.err.println(ERROR_REGISTERING_STATISTIC + e.getMessage());
+            throw new AppFintechException(e.getMessage(), e, ErrorTypeEnum.ERROR_INSERTING_DATA);
         }
     }
 
+    @Override
+    public Statistic getById(Long id) {
+        try {
+            PreparedStatement stm = connection.prepareStatement("SELECT * FROM tb_fth_statistics WHERE cd_statistics = ?");
+            stm.setLong(1, id);
+            ResultSet result = stm.executeQuery();
+
+            if (!result.next())
+                throw new AppFintechException(STATISTICS_NOT_FOUND + id, null, ErrorTypeEnum.ERROR_SEARCHING_DATA);
+
+            return parseStatistics(result);
+
+        } catch (SQLException e) {
+            System.err.println(ERROR_LOOKING_UP_STATISTIC_ID + e.getMessage());
+            throw new AppFintechException(e.getMessage(), e, ErrorTypeEnum.ERROR_SEARCHING_DATA);
+        }
+    }
+
+    @Override
+    public List<Statistic> getAll() {
+        try {
+            PreparedStatement stm = connection.prepareStatement("SELECT * FROM tb_fth_statistics");
+            ResultSet result = stm.executeQuery();
+
+            List<Statistic> lista = new ArrayList<>();
+
+            while (result.next()) {
+                lista.add(parseStatistics(result));
+            }
+
+            return lista;
+
+        } catch (SQLException e) {
+            System.err.println(ERROR_LISTING_STATISTICS + e.getMessage());
+            throw new AppFintechException(e.getMessage(), e, ErrorTypeEnum.ERROR_SEARCHING_DATA);
+        }
+    }
+
+    @Override
     public void closeConnection() throws SQLException {
         connection.close();
     }
 
-    private Statistics parseUser(ResultSet result) throws SQLException {
-        Long id = result.getLong("cd_user");
+    private Statistic parseStatistics(ResultSet result) throws SQLException {
+        Long id = result.getLong("cd_statistics");
         Integer month = result.getInt("dt_month");
         Integer year = result.getInt("dt_year");
         Double budge = result.getDouble("vl_budge");
         Double cost = result.getDouble("vl_cost");
         Double economy = result.getDouble("vl_economy");
 
-        return new Statistics(id, month, year, budge, cost, economy);
+        return new Statistic(id, month, year, budge, cost, economy);
     }
 }

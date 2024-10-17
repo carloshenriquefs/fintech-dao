@@ -1,18 +1,17 @@
 package org.example.dao.users;
 
-import org.example.exception.EntityNotFoundException;
-import org.example.model.User;
+import br.com.fiap.model.User;
 
 import java.sql.SQLException;
 import java.util.List;
 
 public interface UsersDao {
 
-    void register(User user) throws SQLException;
-    User lookUp(long coidgo) throws SQLException, EntityNotFoundException;
-    List<User> list() throws SQLException;
-    void update(User user) throws SQLException;
-    void remove(long codigo) throws SQLException, EntityNotFoundException;
+    void insert(User user);
+    User getById(Long id);
+    List<User> getAll();
+//    void update(User user);
+//    void remove(Long id);
     void closeConnection() throws SQLException;
 
 }

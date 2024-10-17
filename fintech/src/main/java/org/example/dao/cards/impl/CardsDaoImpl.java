@@ -1,20 +1,17 @@
 package org.example.dao.cards.impl;
 
-import org.example.dao.cards.CardsDao;
-import org.example.exception.EntityNotFoundException;
-import org.example.factory.ConnectionFactory;
-import org.example.model.Cards;
+import br.com.fiap.dao.cards.CardsDao;
+import br.com.fiap.exception.AppFintechException;
+import br.com.fiap.exception.ErrorTypeEnum;
+import br.com.fiap.factory.ConnectionFactory;
+import br.com.fiap.model.Card;
 
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.example.constants.Constants.CARDS_NOT_FOUND;
+import static br.com.fiap.constants.Constants.*;
 
 public class CardsDaoImpl implements CardsDao {
 
@@ -24,90 +21,83 @@ public class CardsDaoImpl implements CardsDao {
         connection = ConnectionFactory.getConnection();
     }
 
-    public void register(Cards cards) throws SQLException {
-        PreparedStatement stm = connection.prepareStatement(
-                "INSERT INTO tb_fth_cards (" +
-                        "cd_card, " +
-                        "cd_user, " +
-                        "nm_card, " +
-                        "nm_flag, " +
-                        "dt_validate, " +
-                        "vl_balance) " +
-                        "VALUES (seq_user.nextval, ?, ?, ?, ?, ?)");
+    @Override
+    public void insert(Card card, Long id) {
+        try {
+            PreparedStatement stm = connection.prepareStatement(
+                    "INSERT INTO tb_fth_cards (" +
+                            "cd_card, " +
+                            "cd_user, " +
+                            "nm_card, " +
+                            "nm_flag, " +
+                            "dt_validate, " +
+                            "vl_balance) " +
+                            "VALUES (seq_card.nextval, ?, ?, ?, ?, ?)");
 
-        stm.setLong(1, cards.getCodeUser());
-        stm.setString(2, cards.getNumberCard());
-        stm.setString(3, cards.getFlag());
-        stm.setDate(4, Date.valueOf(cards.getValidate()));
-        stm.setDouble(5, cards.getBalance());
+            stm.setLong(1, id);
+            stm.setString(2, card.getNumberCard());
+            stm.setString(3, card.getFlag());
+            stm.setDate(4, Date.valueOf(card.getValidate()));
+            stm.setDouble(5, card.getBalance());
 
-        stm.executeUpdate();
-    }
+            stm.executeUpdate();
 
-    public Cards lookUp(long codigo) throws SQLException, EntityNotFoundException {
-        PreparedStatement stm = connection.prepareStatement("SELECT * FROM tb_fth_cards WHERE cd_user = ?");
-        stm.setLong(1, codigo);
-        ResultSet result = stm.executeQuery();
-
-        if (!result.next())
-            throw new EntityNotFoundException(CARDS_NOT_FOUND);
-
-        return parseUser(result);
-    }
-
-    public List<Cards> list() throws SQLException {
-        PreparedStatement stm = connection.prepareStatement("SELECT * FROM tb_fth_cards");
-        ResultSet result = stm.executeQuery();
-        List<Cards> lista = new ArrayList<>();
-
-        while (result.next()) {
-            lista.add(parseUser(result));
-        }
-
-        return lista;
-    }
-
-    public void update(Cards cards) throws SQLException {
-        PreparedStatement stm = connection.prepareStatement(
-                "UPDATE tb_fth_cards " +
-                        "SET cd_user = ?, " +
-                        "nm_card = ?, " +
-                        "nm_flag = ?, " +
-                        "dt_validate = ?, " +
-                        "vl_balance = ? " +
-                        "WHERE cd_user = ?"
-        );
-
-        stm.setLong(1, cards.getCodeUser());
-        stm.setString(2, cards.getNumberCard());
-        stm.setString(3, cards.getFlag());
-        stm.setString(4, cards.getValidate().toString());
-        stm.setDouble(5, cards.getBalance());
-
-        stm.executeUpdate();
-    }
-
-    public void remove(long codigo) throws SQLException, EntityNotFoundException {
-        PreparedStatement stm = connection.prepareStatement("DELETE FROM tb_fth_cards WHERE cd_user = ?");
-        stm.setLong(1, codigo);
-        int linha = stm.executeUpdate();
-
-        if (linha == 0) {
-            throw new EntityNotFoundException(CARDS_NOT_FOUND);
+        } catch (SQLException e) {
+            System.err.println(ERROR_REGISTERING_CARD + e.getMessage());
+            throw new AppFintechException(e.getMessage(), e, ErrorTypeEnum.ERROR_INSERTING_DATA);
         }
     }
 
+    @Override
+    public Card getById(Long id) {
+        try {
+            PreparedStatement stm = connection.prepareStatement("SELECT * FROM tb_fth_cards WHERE cd_card = ?");
+            stm.setLong(1, id);
+            ResultSet result = stm.executeQuery();
+
+            if (!result.next())
+                throw new AppFintechException(CARDS_NOT_FOUND + id, null, ErrorTypeEnum.ERROR_SEARCHING_DATA);
+
+            return parseCards(result);
+
+        } catch (SQLException e) {
+            System.err.println(ERROR_LOOKING_UP_CARD_ID + e.getMessage());
+            throw new AppFintechException(e.getMessage(), e, ErrorTypeEnum.ERROR_SEARCHING_DATA);
+        }
+    }
+
+    @Override
+    public List<Card> getAll() {
+        try {
+            PreparedStatement stm = connection.prepareStatement("SELECT * FROM tb_fth_cards");
+            ResultSet result = stm.executeQuery();
+
+            List<Card> lista = new ArrayList<>();
+
+            while (result.next()) {
+                lista.add(parseCards(result));
+            }
+
+            return lista;
+
+        } catch (SQLException e) {
+            System.err.println(ERROR_LISTING_CARDS + e.getMessage());
+            throw new AppFintechException(e.getMessage(), e, ErrorTypeEnum.ERROR_SEARCHING_DATA);
+        }
+    }
+
+    @Override
     public void closeConnection() throws SQLException {
         connection.close();
     }
 
-    private Cards parseUser(ResultSet result) throws SQLException {
+    private Card parseCards(ResultSet result) throws SQLException {
         Long id = result.getLong("cd_user");
         String card = result.getString("nm_card");
         String flag = result.getString("nm_flag");
         LocalDate validate = result.getDate("dt_validate").toLocalDate();
         Double balance = result.getDouble("vl_balance");
 
-        return new Cards(id, card, flag, validate, balance);
+        return new Card(id, card, flag, validate, balance);
     }
 }

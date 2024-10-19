@@ -2,27 +2,24 @@ package org.example.model;
 
 import java.time.LocalDate;
 
-public class Notes {
+public class Note {
 
     private Long code;
-    private Long codeUser;
+    private Long userId;
     private String title;
     private String comentary;
     private LocalDate note;
 
-    public Notes() {
-    }
-
-    public Notes(Long codeUser, String title, String comentary, LocalDate note) {
-        this.codeUser = codeUser;
+    public Note(Long code, Long userId, String title, String comentary, LocalDate note) {
+        this.code = code;
+        this.userId = userId;
         this.title = title;
         this.comentary = comentary;
         this.note = note;
     }
 
-    public Notes(Long code, Long codeUser, String title, String comentary, LocalDate note) {
-        this.code = code;
-        this.codeUser = codeUser;
+    public Note(Long userId, String title, String comentary, LocalDate note) {
+        this.userId = userId;
         this.title = title;
         this.comentary = comentary;
         this.note = note;
@@ -36,12 +33,12 @@ public class Notes {
         this.code = code;
     }
 
-    public Long getCodeUser() {
-        return codeUser;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setCodeUser(Long codeUser) {
-        this.codeUser = codeUser;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public String getTitle() {

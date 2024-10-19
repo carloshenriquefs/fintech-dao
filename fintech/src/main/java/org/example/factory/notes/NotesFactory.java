@@ -2,8 +2,8 @@ package org.example.factory.notes;
 
 import org.example.dao.notes.NotesDao;
 import org.example.dao.notes.impl.NotesDaoImpl;
-import org.example.model.Notes;
-import org.example.model.builder.NotesBuilder;
+import org.example.model.Note;
+import org.example.model.builder.NoteBuilder;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -14,10 +14,9 @@ public class NotesFactory {
         return new NotesDaoImpl();
     }
 
-    public static Notes createNotes() {
-        return new NotesBuilder()
-                .setCode(1L)
-                .setCodeUser(1L)
+    public static Note createNotes() {
+        return new NoteBuilder()
+                .setUserId(2L)
                 .setTitle("Pagamento Em Debito")
                 .setComentary("Pagamento Efetuado")
                 .setNote(LocalDate.of(2021, 06, 25))

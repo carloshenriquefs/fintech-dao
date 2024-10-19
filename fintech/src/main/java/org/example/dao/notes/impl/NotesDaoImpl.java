@@ -1,17 +1,22 @@
 package org.example.dao.notes.impl;
 
-import br.com.fiap.dao.notes.NotesDao;
-import br.com.fiap.exception.AppFintechException;
-import br.com.fiap.exception.ErrorTypeEnum;
-import br.com.fiap.factory.ConnectionFactory;
-import br.com.fiap.model.Note;
+import org.example.constants.Constants;
+import org.example.dao.notes.NotesDao;
+import org.example.exception.AppFintechException;
+import org.example.exception.ErrorTypeEnum;
+import org.example.factory.ConnectionFactory;
+import org.example.model.Note;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static br.com.fiap.constants.Constants.*;
+import static org.example.constants.Constants.*;
 
 public class NotesDaoImpl implements NotesDao {
 

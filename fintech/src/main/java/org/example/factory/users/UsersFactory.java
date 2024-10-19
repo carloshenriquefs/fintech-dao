@@ -16,7 +16,6 @@ public class UsersFactory {
 
     public static User createUser() {
         return new UserBuilder()
-                .setCode(1L)
                 .setUsername("Matheus")
                 .setLastName("Santos")
                 .setEmail("matheusSantos@gmail.com")

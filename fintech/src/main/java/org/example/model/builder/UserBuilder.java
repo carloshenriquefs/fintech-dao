@@ -5,7 +5,7 @@ import org.example.model.User;
 import java.time.LocalDate;
 
 public class UserBuilder {
-    private Long code;
+
     private String username;
     private String lastName;
     private String email;
@@ -15,11 +15,6 @@ public class UserBuilder {
     private String gender;
     private String position;
     private LocalDate date;
-
-    public UserBuilder setCode(Long code) {
-        this.code = code;
-        return this;
-    }
 
     public UserBuilder setUsername(String username) {
         this.username = username;
@@ -67,7 +62,7 @@ public class UserBuilder {
     }
 
     public User build() {
-        return new User(code, username, lastName, email,
+        return new User(username, lastName, email,
                 password, address, telephone, gender, position, date);
     }
 }

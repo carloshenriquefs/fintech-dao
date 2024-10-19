@@ -15,9 +15,6 @@ public class User {
     private String position;
     private LocalDate date;
 
-    public User() {
-    }
-
     public User(String username, String lastName, String email, String password, String address, String telephone, String gender, String position, LocalDate date) {
         this.username = username;
         this.lastName = lastName;
@@ -30,7 +27,8 @@ public class User {
         this.date = date;
     }
 
-    public User(Long code, String username, String lastName, String email, String password, String address, String telephone, String gender, String position, LocalDate date) {
+    public User(Long code, String username, String lastName, String email,
+                String password, String address, String telephone, String gender, String position, LocalDate date) {
         this.code = code;
         this.username = username;
         this.lastName = lastName;

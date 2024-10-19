@@ -1,13 +1,13 @@
 package org.example.model.builder;
 
-import org.example.model.Cards;
+import org.example.model.Card;
 
 import java.time.LocalDate;
 
 public class CardsBuilder {
 
     private Long code;
-    private Long codeUser;
+    private Long userId;
     private String numberCard;
     private String flag;
     private LocalDate validate;
@@ -18,8 +18,8 @@ public class CardsBuilder {
         return this;
     }
 
-    public CardsBuilder setCodeUser(Long codeUser) {
-        this.codeUser = codeUser;
+    public CardsBuilder setUserId(Long userId) {
+        this.userId = userId;
         return this;
     }
 
@@ -43,7 +43,7 @@ public class CardsBuilder {
         return this;
     }
 
-    public Cards build() {
-        return new Cards(codeUser, numberCard, flag, validate, balance);
+    public Card build() {
+        return new Card(userId, numberCard, flag, validate, balance);
     }
 }

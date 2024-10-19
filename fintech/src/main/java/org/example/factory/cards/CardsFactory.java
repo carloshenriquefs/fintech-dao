@@ -2,7 +2,7 @@ package org.example.factory.cards;
 
 import org.example.dao.cards.CardsDao;
 import org.example.dao.cards.impl.CardsDaoImpl;
-import org.example.model.Cards;
+import org.example.model.Card;
 import org.example.model.builder.CardsBuilder;
 
 import java.sql.SQLException;
@@ -14,10 +14,9 @@ public class CardsFactory {
         return new CardsDaoImpl();
     }
 
-    public static Cards createCards() {
+    public static Card createCards() {
         return new CardsBuilder()
                 .setCode(1L)
-                .setCodeUser(2L)
                 .setNumberCard("12036")
                 .setFlag("0123")
                 .setValidate(LocalDate.of(2015, 3, 14))
@@ -25,3 +24,4 @@ public class CardsFactory {
                 .build();
     }
 }
+

@@ -1,17 +1,24 @@
 package org.example.dao.cards.impl;
 
-import br.com.fiap.dao.cards.CardsDao;
-import br.com.fiap.exception.AppFintechException;
-import br.com.fiap.exception.ErrorTypeEnum;
-import br.com.fiap.factory.ConnectionFactory;
-import br.com.fiap.model.Card;
+import org.example.dao.cards.CardsDao;
+import org.example.exception.AppFintechException;
+import org.example.exception.ErrorTypeEnum;
+import org.example.factory.ConnectionFactory;
+import org.example.model.Card;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static br.com.fiap.constants.Constants.*;
+import static org.example.constants.Constants.CARDS_NOT_FOUND;
+import static org.example.constants.Constants.ERROR_LISTING_CARDS;
+import static org.example.constants.Constants.ERROR_LOOKING_UP_CARD_ID;
+import static org.example.constants.Constants.ERROR_REGISTERING_CARD;
 
 public class CardsDaoImpl implements CardsDao {
 

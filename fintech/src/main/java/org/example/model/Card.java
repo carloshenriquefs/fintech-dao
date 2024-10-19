@@ -2,29 +2,26 @@ package org.example.model;
 
 import java.time.LocalDate;
 
-public class Cards {
+public class Card {
 
     private Long code;
-    private Long codeUser;
+    private Long userId;
     private String numberCard;
     private String flag;
     private LocalDate validate;
     private Double balance;
 
-    public Cards() {
-    }
-
-    public Cards(Long codeUser, String numberCard, String flag, LocalDate validate, Double balance) {
-        this.codeUser = codeUser;
+    public Card(Long userId, String numberCard, String flag, LocalDate validate, Double balance) {
+        this.userId = userId;
         this.numberCard = numberCard;
         this.flag = flag;
         this.validate = validate;
         this.balance = balance;
     }
 
-    public Cards(Long code, Long codeUser, String numberCard, String flag, LocalDate validate, Double balance) {
+    public Card(Long code, Long userId, String numberCard, String flag, LocalDate validate, Double balance) {
         this.code = code;
-        this.codeUser = codeUser;
+        this.userId = userId;
         this.numberCard = numberCard;
         this.flag = flag;
         this.validate = validate;
@@ -39,12 +36,12 @@ public class Cards {
         this.code = code;
     }
 
-    public Long getCodeUser() {
-        return codeUser;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setCodeUser(Long codeUser) {
-        this.codeUser = codeUser;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public String getNumberCard() {
@@ -79,3 +76,4 @@ public class Cards {
         this.balance = balance;
     }
 }
+

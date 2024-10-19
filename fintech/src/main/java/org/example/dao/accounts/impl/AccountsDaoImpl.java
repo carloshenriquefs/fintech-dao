@@ -1,10 +1,10 @@
 package org.example.dao.accounts.impl;
 
-import br.com.fiap.dao.accounts.AccountsDao;
-import br.com.fiap.exception.AppFintechException;
-import br.com.fiap.exception.ErrorTypeEnum;
-import br.com.fiap.factory.ConnectionFactory;
-import br.com.fiap.model.Account;
+import org.example.dao.accounts.AccountsDao;
+import org.example.exception.AppFintechException;
+import org.example.exception.ErrorTypeEnum;
+import org.example.factory.ConnectionFactory;
+import org.example.model.Account;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,7 +13,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static br.com.fiap.constants.Constants.*;
+import static org.example.constants.Constants.ACCOUNT_NOT_FOUND;
+import static org.example.constants.Constants.ERROR_LISTING_ACCOUNT;
+import static org.example.constants.Constants.ERROR_LOOKING_UP_ACCOUNT_ID;
+import static org.example.constants.Constants.ERROR_REGISTERING_ACCOUNT;
 
 public class AccountsDaoImpl implements AccountsDao {
 

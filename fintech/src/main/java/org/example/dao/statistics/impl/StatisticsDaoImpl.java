@@ -1,10 +1,10 @@
 package org.example.dao.statistics.impl;
 
-import br.com.fiap.dao.statistics.StatisticsDao;
-import br.com.fiap.exception.AppFintechException;
-import br.com.fiap.exception.ErrorTypeEnum;
-import br.com.fiap.factory.ConnectionFactory;
-import br.com.fiap.model.Statistic;
+import org.example.dao.statistics.StatisticsDao;
+import org.example.exception.AppFintechException;
+import org.example.exception.ErrorTypeEnum;
+import org.example.factory.ConnectionFactory;
+import org.example.model.Statistic;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,7 +13,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static br.com.fiap.constants.Constants.*;
+import static org.example.constants.Constants.ERROR_LISTING_STATISTICS;
+import static org.example.constants.Constants.ERROR_LOOKING_UP_STATISTIC_ID;
+import static org.example.constants.Constants.ERROR_REGISTERING_STATISTIC;
+import static org.example.constants.Constants.STATISTICS_NOT_FOUND;
 
 public class StatisticsDaoImpl implements StatisticsDao {
 

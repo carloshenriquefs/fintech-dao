@@ -1,20 +1,18 @@
 package org.example.model;
 
-public class Statistics {
+public class Statistic {
 
     private Long code;
-    private Long userCode;
+    private Long userId;
     private Integer month;
     private Integer year;
     private Double budge;
     private Double cost;
     private Double economy;
 
-    public Statistics() {
-    }
-
-    public Statistics(Long userCode, Integer month, Integer year, Double budge, Double cost, Double economy) {
-        this.userCode = userCode;
+    public Statistic(Long code, Long userId, Integer month, Integer year, Double budge, Double cost, Double economy) {
+        this.code = code;
+        this.userId = userId;
         this.month = month;
         this.year = year;
         this.budge = budge;
@@ -22,7 +20,8 @@ public class Statistics {
         this.economy = economy;
     }
 
-    public Statistics(Integer month, Integer year, Double budge, Double cost, Double economy) {
+    public Statistic(Long userId, Integer month, Integer year, Double budge, Double cost, Double economy) {
+        this.userId = userId;
         this.month = month;
         this.year = year;
         this.budge = budge;
@@ -34,8 +33,16 @@ public class Statistics {
         return code;
     }
 
-    public Long getUserCode() {
-        return userCode;
+    public void setCode(Long code) {
+        this.code = code;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public Integer getMonth() {

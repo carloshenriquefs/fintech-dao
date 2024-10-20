@@ -2,8 +2,8 @@ package org.example.factory.transactions;
 
 import org.example.dao.transactions.TransactionsDao;
 import org.example.dao.transactions.impl.TransactionsDaoImpl;
-import org.example.model.Transactions;
-import org.example.model.builder.TransactionsBuilder;
+import org.example.model.Transaction;
+import org.example.model.builder.TransactionBuilder;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -14,11 +14,10 @@ public class TransactionsFactory {
         return new TransactionsDaoImpl();
     }
 
-    public static Transactions createTransaction() {
-        return new TransactionsBuilder()
-                .setCode(1L)
-                .setCodeUser(2L)
-                .setTransactionType("Debito")
+    public static Transaction createTransaction() {
+        return new TransactionBuilder()
+                .setUserId(2L)
+                .setTransactionType("expenses")
                 .setDescription("Transacao Realizada")
                 .setValueTransaction(2400.0)
                 .setDataTransacao(LocalDate.of(2020, 4, 12))

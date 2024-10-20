@@ -2,29 +2,26 @@ package org.example.model;
 
 import java.time.LocalDate;
 
-public class Transactions {
+public class Transaction {
 
     private Long code;
-    private Long codeUser;
+    private Long userId;
     private String transactionType;
     private String description;
     private Double valueTransaction;
     private LocalDate dataTransacao;
 
-    public Transactions() {
-    }
-
-    public Transactions(Long codeUser, String transactionType, String description, Double valueTransaction, LocalDate dataTransacao) {
-        this.codeUser = codeUser;
+    public Transaction(Long userId, String transactionType, String description, Double valueTransaction, LocalDate dataTransacao) {
+        this.userId = userId;
         this.transactionType = transactionType;
         this.description = description;
         this.valueTransaction = valueTransaction;
         this.dataTransacao = dataTransacao;
     }
 
-    public Transactions(Long code, Long codeUser, String transactionType, String description, Double valueTransaction, LocalDate dataTransacao) {
+    public Transaction(Long code, Long userId, String transactionType, String description, Double valueTransaction, LocalDate dataTransacao) {
         this.code = code;
-        this.codeUser = codeUser;
+        this.userId = userId;
         this.transactionType = transactionType;
         this.description = description;
         this.valueTransaction = valueTransaction;
@@ -39,12 +36,12 @@ public class Transactions {
         this.code = code;
     }
 
-    public Long getCodeUser() {
-        return codeUser;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setCodeUser(Long codeUser) {
-        this.codeUser = codeUser;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public String getTransactionType() {

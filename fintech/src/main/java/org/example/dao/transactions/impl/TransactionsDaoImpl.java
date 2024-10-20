@@ -1,17 +1,24 @@
 package org.example.dao.transactions.impl;
 
-import br.com.fiap.dao.transactions.TransactionsDao;
-import br.com.fiap.exception.AppFintechException;
-import br.com.fiap.exception.ErrorTypeEnum;
-import br.com.fiap.factory.ConnectionFactory;
-import br.com.fiap.model.Transaction;
+import org.example.dao.transactions.TransactionsDao;
+import org.example.exception.AppFintechException;
+import org.example.exception.ErrorTypeEnum;
+import org.example.factory.ConnectionFactory;
+import org.example.model.Transaction;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static br.com.fiap.constants.Constants.*;
+import static org.example.constants.Constants.ERROR_LISTING_TRANSACTIONS;
+import static org.example.constants.Constants.ERROR_LOOKING_UP_TRANSACTION_ID;
+import static org.example.constants.Constants.ERROR_REGISTERING_TRANSACTION;
+import static org.example.constants.Constants.TRANSACTIONS_NOT_FOUND;
 
 public class TransactionsDaoImpl implements TransactionsDao {
 
